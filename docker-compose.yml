@@ -1,0 +1,24 @@
+version: "2.1"
+services:
+  tuleap:
+    image: enalean/tuleap-aio:centos7
+    restart: unless-stopped
+    environment:
+      VIRTUAL_HOST: "localhost"
+      DB_HOST: "db"
+      MYSQL_ROOT_PASSWORD: "admin"
+    volumes:
+      - /tuleap-data/data:/data:Z
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - db
+  db:
+    image: mysql:5.6
+    restart: unless-stopped
+    volumes:
+      - /tuleap-data/db-data:/var/lib/mysql:Z
+      - /tuleap-data/sql_mode.cnf:/etc/mysql/conf.d/sql_mode.cnf:Z
+    environment:
+      MYSQL_ROOT_PASSWORD: "admin"
